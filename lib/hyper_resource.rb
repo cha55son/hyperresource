@@ -8,6 +8,7 @@ require 'hyper_resource/version'
 
 require 'hyper_resource/adapter'
 require 'hyper_resource/adapter/hal_json'
+require 'hyper_resource/adapter/siren_json'
 
 require 'hyper_resource/modules/data_type'
 require 'hyper_resource/modules/deprecations'
