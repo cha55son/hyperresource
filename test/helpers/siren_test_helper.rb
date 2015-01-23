@@ -1,12 +1,14 @@
 require 'test_helper'
 
 SIREN_BODY = {
+  'class' => ['graphs', 'collection'],
   'properties' => {
     'page' => 1
   },
   'entities' => [
     {
-      'rel' => ['graphs'],
+      'class' => ['graphs'],
+      'rel' => ['/rel/graphs'],
       'properties' => {
         'name' => 'test1'
       },

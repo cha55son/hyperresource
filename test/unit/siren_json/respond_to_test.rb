@@ -1,10 +1,10 @@
 require 'siren_test_helper'
 
 describe HyperResource do
-  class NoMethodsAPI < HyperResource; end
+  class SirenNoMethodsAPI < HyperResource; end
 
   before do
-    @api = NoMethodsAPI.new(
+    @api = SirenNoMethodsAPI.new(
       :root => 'http://example.com',
       :adapter => HyperResource::Adapter::SIREN_JSON
     )
@@ -19,6 +19,8 @@ describe HyperResource do
       @api.objects.methods.wont_include(:graphs)
       @api.methods.wont_include(:next)
       @api.links.methods.wont_include(:next)
+
+      # Need to add actions here
     end
 
     it "responds_to the right things" do
@@ -28,6 +30,8 @@ describe HyperResource do
       @api.objects.must_respond_to(:graphs)
       @api.must_respond_to(:next)
       @api.links.must_respond_to(:next)
+
+      # Need to add actions here
     end
   end
 end

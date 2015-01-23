@@ -32,6 +32,7 @@ class HyperResource
 
         def get_self_href(response)
           links = response['links']
+          # Embedded link check
           return (response['href'] || nil) unless links
           links.each do |link|
             return link['href'] if link['rel'].include?('self')
@@ -48,13 +49,15 @@ class HyperResource
 
           entities.each do |entity|
             next unless entity.is_a? Hash
-            rel = entity['rel'][0] rescue nil
+            rel = entity['class'][0].to_s rescue nil
             next unless rel
-            objs[rel.to_s] = rsrc.new_from({
+            res = rsrc.new_from({
               :resource => rsrc,
               :body => entity,
               :href => (get_self_href(entity))
             })
+            objs[rel] ||= []
+            objs[rel] << res
           end
         end
 
