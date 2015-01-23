@@ -1,8 +1,4 @@
-require 'minitest/autorun'
-require 'minitest/pride'
-require 'mocha/setup'
-require 'byebug'
-require 'hyperresource'
+require 'test_helper'
 
 HAL_BODY = {
   'attr1' => 'val1',
@@ -42,4 +38,3 @@ HAL_BODY = {
     ]
   }
 }
-

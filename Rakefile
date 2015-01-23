@@ -6,9 +6,9 @@ task :default => [:test]
 Rake::TestTask.new do |t|
   t.libs << 'test'
   t.libs << 'test/lib'
-  t.test_files = FileList['test/**/*_test.rb']
+  t.libs << 'test/helpers'
+  t.test_files = FileList['test/unit/**/*_test.rb']
   t.warning = !!ENV['WARNINGS']
-  t.verbose = true
 end
 
 task :release do

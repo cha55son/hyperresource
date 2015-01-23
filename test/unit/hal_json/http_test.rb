@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'hal_test_helper'
 
 stub_connection = Faraday.new do |builder|
   builder.adapter :test do |stub|

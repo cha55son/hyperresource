@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'hal_test_helper'
 
 describe HyperResource do
   before do

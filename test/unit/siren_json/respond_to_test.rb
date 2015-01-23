@@ -1,30 +1,33 @@
-require 'test_helper'
+require 'siren_test_helper'
 
 describe HyperResource do
   class NoMethodsAPI < HyperResource; end
 
   before do
-    @api = NoMethodsAPI.new(:root => 'http://example.com')
-    @api.adapter.apply(HAL_BODY, @api)
+    @api = NoMethodsAPI.new(
+      :root => 'http://example.com',
+      :adapter => HyperResource::Adapter::SIREN_JSON
+    )
+    @api.adapter.apply(SIREN_BODY, @api)
   end
 
   describe 'respond_to' do
     it "doesn't create methods" do
-      @api.methods.wont_include(:attr1)
-      @api.attributes.methods.wont_include(:attr1)
-      @api.methods.wont_include(:obj1s)
-      @api.objects.methods.wont_include(:obj1s)
-      @api.methods.wont_include(:foobars)
-      @api.links.methods.wont_include(:foobars)
+      @api.methods.wont_include(:page)
+      @api.attributes.methods.wont_include(:page)
+      @api.methods.wont_include(:graphs)
+      @api.objects.methods.wont_include(:graphs)
+      @api.methods.wont_include(:next)
+      @api.links.methods.wont_include(:next)
     end
 
     it "responds_to the right things" do
-      @api.must_respond_to(:attr1)
-      @api.attributes.must_respond_to(:attr1)
-      @api.must_respond_to(:obj1s)
-      @api.objects.must_respond_to(:obj1s)
-      @api.must_respond_to(:foobars)
-      @api.links.must_respond_to(:foobars)
+      @api.must_respond_to(:page)
+      @api.attributes.must_respond_to(:page)
+      @api.must_respond_to(:graphs)
+      @api.objects.must_respond_to(:graphs)
+      @api.must_respond_to(:next)
+      @api.links.must_respond_to(:next)
     end
   end
 end

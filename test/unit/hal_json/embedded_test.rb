@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'hal_test_helper'
 
 describe "Embedded Resources" do
   class TestAPI < HyperResource; self.root = 'http://example.com' end

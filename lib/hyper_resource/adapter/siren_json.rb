@@ -24,37 +24,50 @@ class HyperResource
 
           apply_objects(response, resource)
           apply_links(response, resource)
-          # apply_attributes(response, resource)
+          apply_attributes(response, resource)
           resource.loaded = true
-          resource.href = response['links']['self']['href'] rescue nil
+          resource.href = get_self_href(response)
           resource
         end
 
+        def get_self_href(response)
+          links = response['links']
+          return (response['href'] || nil) unless links
+          links.each do |link|
+            return link['href'] if link['rel'].include?('self')
+          end
+          nil
+        end
 
       private
 
         def apply_objects(resp, rsrc)
-          return unless resp['entities']
+          entities = resp['entities']
+          return unless entities
           objs = rsrc.objects
 
-          resp['entities'].each do |entity|
+          entities.each do |entity|
             next unless entity.is_a? Hash
-            objs[entity['title'] || ''] = rsrc.new_from({
+            rel = entity['rel'][0] rescue nil
+            next unless rel
+            objs[rel.to_s] = rsrc.new_from({
               :resource => rsrc,
               :body => entity,
-              :href => (entity['links']['self']['href'] rescue nil)
+              :href => (get_self_href(entity))
             })
           end
         end
 
-
         def apply_links(resp, rsrc)
-          return unless resp['links']
+          links_data = resp['links']
+          return unless links_data
           links = rsrc.links
 
-          resp['links'].each do |link_spec|
+          links_data.each do |link_spec|
             next unless link_spec.is_a? Hash
-            links[link_spec['rel'][0] || ''] = new_link_from_spec(rsrc, link_spec)
+            rel = link_spec['rel'][0] rescue nil
+            next unless rel
+            links[rel] = new_link_from_spec(rsrc, link_spec)
           end
         end
 
@@ -62,18 +75,16 @@ class HyperResource
           resource.class::Link.new(resource, link_spec)
         end
 
+        def apply_attributes(resp, rsrc)
+          given_attrs = resp['properties'] || { }
+          filtered_attrs = rsrc.incoming_body_filter(given_attrs)
 
-      #   def apply_attributes(resp, rsrc)
-      #     given_attrs = resp.reject{|k,v| %w(_links _embedded).include?(k)}
-      #     filtered_attrs = rsrc.incoming_body_filter(given_attrs)
+          filtered_attrs.keys.each do |attr|
+            rsrc.attributes[attr] = filtered_attrs[attr]
+          end
 
-      #     filtered_attrs.keys.each do |attr|
-      #       rsrc.attributes[attr] = filtered_attrs[attr]
-      #     end
-
-      #     rsrc.attributes._hr_clear_changed
-      #   end
-
+          rsrc.attributes._hr_clear_changed
+        end
       end
     end
   end

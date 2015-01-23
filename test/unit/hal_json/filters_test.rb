@@ -1,4 +1,4 @@
-require 'test_helper'
+require 'hal_test_helper'
 
 describe 'HyperResource#incoming_body_filter' do
   class IncomingBodyFilterAPI < HyperResource
